@@ -1,0 +1,10 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: json_placeholder
+      POSTGRES_USER: json_placeholder
+      POSTGRES_PASSWORD: json_placeholder
+    ports:
+      - 5432
+

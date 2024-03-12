@@ -1,0 +1,29 @@
+spring:
+  docker:
+    compose:
+      stop:
+        command: down
+  sql:
+    init:
+      mode: always
+jwt:
+  cookie-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
+server:
+  http2:
+    enabled: true
+  ssl:
+    key-store: keystore.jks
+    key-store-password: password
+    key-alias: mykey
+  port: 8081
+logging:
+  level:
+    org.springframework.security: trace
+springdoc:
+  api-docs:
+    path=: /api-docs
+app:
+  host: https://jsonplaceholder.typicode.com/
+  albums-url: https://jsonplaceholder.typicode.com/albums
+  posts-url: https://jsonplaceholder.typicode.com/posts
+  users-url: https://jsonplaceholder.typicode.com/users
