@@ -12,13 +12,14 @@ public class AuthenticationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void auth(AuthenticationRequest request) {
-        ProxyUser user = insertUser(request.username(), request.password());
-        insertUserAuthority(user.id(), user.role());
+        ProxyUser user = insertUser(request.username(), request.password());;
+        insertUserAuthority(user.id(), request.role());
     }
 
     public ProxyUser insertUser(String username, String password) {
-        String sql = "INSERT INTO t_user (c_username, c_password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, username, password);
+        Integer id = jdbcTemplate.queryForObject("SELECT MAX(id) from t_user", Integer.class);
+        String sql = "INSERT INTO t_user (id, c_username, c_password) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, (id + 1), username, "{noop}" + password);
         var user = jdbcTemplate.query("select * from t_user where c_username = ?",
                         (rs, i) -> ProxyUser.builder()
                                         .id(rs.getInt(1))
@@ -33,7 +34,10 @@ public class AuthenticationRepository {
     }
 
     public void insertUserAuthority(int userId, String authority) {
-        String sql = "INSERT INTO t_user_authority (id_user, c_authority) VALUES (?, ?)";
-        jdbcTemplate.update(sql, userId, authority);
+        System.out.println(authority);
+        String sql = "INSERT INTO t_user_authority (id, id_user, c_authority) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, userId, userId, authority);
     }
+
+
 }

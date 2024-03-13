@@ -70,13 +70,13 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    @CachePut(value = "users", key = "#user.id")
+    @CachePut(value = "users", key = "#userId")
     public void putUser(String userId, User user) {
         restTemplate.put(apiProperties.getUsersUrl() + "/%s".formatted(userId), user);
     }
 
     @Override
-    @CachePut(value = "users", key = "#userDetails.id")
+    @CachePut(value = "posts", key = "#result.id")
     public UserResponse patchUser(String userId, Map<String, Object> userDetails) {
         return restTemplate.patchForObject(apiProperties.getUsersUrl() + "/%s".formatted(userId), userDetails, UserResponse.class);
     }

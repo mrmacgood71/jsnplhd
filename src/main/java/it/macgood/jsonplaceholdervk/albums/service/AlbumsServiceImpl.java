@@ -92,14 +92,14 @@ public class AlbumsServiceImpl implements AlbumsService {
     }
 
     @Override
-    @CachePut(value = "albums", key = "#album.id")
+    @CachePut(value = "albums", key = "#albumId")
     public Album putAlbum(String albumId, Album album) {
         restTemplate.put(apiProperties.getAlbumsUrl() + "/%s".formatted(albumId), album);
         return album;
     }
 
     @Override
-    @CachePut(value = "albums", key = "#albumDetails.id")
+    @CachePut(value = "posts", key = "#result.id")
     public AlbumResponse patchAlbum(String albumId, Map<String, Object> albumDetails) {
         return restTemplate.patchForObject(
                 apiProperties.getAlbumsUrl() + "/%s".formatted(albumId),

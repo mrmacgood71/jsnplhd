@@ -12,6 +12,7 @@ import it.macgood.jsonplaceholdervk.authentication.cookie.TokenCookieSessionAuth
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -53,10 +54,16 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeHttpRequests ->
                         authorizeHttpRequests
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .requestMatchers("/api/demo/**").permitAll()
-                                .requestMatchers("/api/v1/posts/**").hasAnyRole("ADMIN", "POSTS")
-                                .requestMatchers("/api/v1/users/**").hasAnyRole("ADMIN", "USERS")
-                                .requestMatchers("/api/v1/albums/**").hasAnyRole("ADMIN", "ALBUMS")
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/albums/**").hasAnyRole("ADMIN", "ALBUMS_VIEWER", "ALBUMS_EDITOR")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/albums/**").hasAnyRole("ADMIN", "ALBUMS_EDITOR")
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/albums/**").hasAnyRole("ADMIN", "ALBUMS_EDITOR")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/albums/**").hasAnyRole("ADMIN", "ALBUMS_EDITOR")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/posts/**").hasAnyRole("ADMIN", "POSTS_VIEWER", "POSTS_EDITOR")
+                                .requestMatchers(HttpMethod.POST, "/api/v1/posts/**").hasAnyRole("ADMIN", "POSTS_EDITOR")
+                                .requestMatchers(HttpMethod.PUT, "/api/v1/posts/**").hasAnyRole("ADMIN", "POSTS_EDITOR")
+                                .requestMatchers(HttpMethod.DELETE, "/api/v1/posts/**").hasAnyRole("ADMIN", "POSTS_EDITOR")
+                                .requestMatchers("api/v1/users").hasAnyRole("ADMIN", "USERS")
                                 .requestMatchers("/error", "index.html").permitAll()
                                 .anyRequest().authenticated()
                 )

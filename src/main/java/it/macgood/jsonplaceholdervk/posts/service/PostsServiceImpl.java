@@ -91,13 +91,13 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    @CachePut(value = "posts", key = "#post.id")
+    @CachePut(value = "posts", key = "#postId")
     public void putPost(String postId, Post post) {
         restTemplate.put(apiProperties.getPostsUrl() + "/%s".formatted(postId), post);
     }
 
     @Override
-    @CachePut(value = "posts", key = "#postDetails.id")
+    @CachePut(value = "posts", key = "#result.id")
     public PostResponse patchPost(String postId, Map<String, Object> postDetails) {
         return restTemplate.patchForObject(
                 apiProperties.getPostsUrl() + "/%s".formatted(postId),
