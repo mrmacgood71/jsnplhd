@@ -2,10 +2,8 @@ package it.macgood.jsonplaceholdervk.posts.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.macgood.jsonplaceholdervk.albums.entity.Album;
 import it.macgood.jsonplaceholdervk.albums.entity.AlbumResponse;
-import it.macgood.jsonplaceholdervk.config.ApiConfigurationProperties;
-import it.macgood.jsonplaceholdervk.photos.Photo;
+import it.macgood.jsonplaceholdervk.utils.ApiConfigurationProperties;
 import it.macgood.jsonplaceholdervk.posts.entity.Comment;
 import it.macgood.jsonplaceholdervk.posts.entity.Post;
 import it.macgood.jsonplaceholdervk.posts.entity.PostResponse;
@@ -13,6 +11,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,16 +39,13 @@ public class PostsServiceImpl implements PostsService {
     @Override
     @Cacheable("posts")
     public List<PostResponse> getPosts() {
-        var response = restTemplate.getForEntity(
+        ResponseEntity<List<PostResponse>> response = restTemplate.exchange(
                 apiProperties.getPostsUrl(),
-                String.class
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
         );
-
-        try {
-            return mapper.readerForListOf(PostResponse.class).<ArrayList<PostResponse>>readValue(response.getBody());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return response.getBody();
     }
 
     @Override

@@ -24,8 +24,12 @@ public class TokenCookieSessionAuthenticationStrategy implements SessionAuthenti
     private Function<Token, String> tokenStringSerializer = Objects::toString;
 
     @Override
-    public void onAuthentication(Authentication authentication, HttpServletRequest request,
-                                 HttpServletResponse response) throws SessionAuthenticationException {
+    public void onAuthentication(
+            Authentication authentication,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws SessionAuthenticationException {
+        System.out.println("TokenCookieSessionAuthenticationStrategy.onAuthentication");
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
             var token = this.tokenCookieFactory.apply(authentication);
             var tokenString = this.tokenStringSerializer.apply(token);

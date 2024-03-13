@@ -22,8 +22,10 @@ logging:
 springdoc:
   api-docs:
     path=: /api-docs
+
 app:
   host: https://jsonplaceholder.typicode.com/
   albums-url: https://jsonplaceholder.typicode.com/albums
   posts-url: https://jsonplaceholder.typicode.com/posts
   users-url: https://jsonplaceholder.typicode.com/users
+  web-socket-echo-server-url: wss://echo.websocket.org

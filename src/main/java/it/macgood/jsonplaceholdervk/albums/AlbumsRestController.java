@@ -4,7 +4,7 @@ import it.macgood.jsonplaceholdervk.albums.entity.AlbumMapper;
 import it.macgood.jsonplaceholdervk.albums.entity.AlbumRequest;
 import it.macgood.jsonplaceholdervk.albums.entity.AlbumResponse;
 import it.macgood.jsonplaceholdervk.albums.service.AlbumsService;
-import it.macgood.jsonplaceholdervk.photos.Photo;
+import it.macgood.jsonplaceholdervk.albums.entity.Photo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

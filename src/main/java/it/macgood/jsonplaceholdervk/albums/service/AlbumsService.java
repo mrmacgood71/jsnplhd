@@ -2,7 +2,7 @@ package it.macgood.jsonplaceholdervk.albums.service;
 
 import it.macgood.jsonplaceholdervk.albums.entity.Album;
 import it.macgood.jsonplaceholdervk.albums.entity.AlbumResponse;
-import it.macgood.jsonplaceholdervk.photos.Photo;
+import it.macgood.jsonplaceholdervk.albums.entity.Photo;
 
 import java.util.List;
 import java.util.Map;

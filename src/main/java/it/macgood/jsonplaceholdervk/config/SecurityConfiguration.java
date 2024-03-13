@@ -1,18 +1,23 @@
-package it.macgood.jsonplaceholdervk.authentication.config;
+package it.macgood.jsonplaceholdervk.config;
 
+import com.nimbusds.jose.crypto.DirectDecrypter;
+import com.nimbusds.jose.crypto.DirectEncrypter;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
 import it.macgood.jsonplaceholdervk.audit.AuditRepository;
 import it.macgood.jsonplaceholdervk.audit.RequestAuditFilter;
 import it.macgood.jsonplaceholdervk.authentication.cookie.GetCsrfTokenFilter;
+import it.macgood.jsonplaceholdervk.authentication.cookie.TokenCookieJweStringDeserializer;
 import it.macgood.jsonplaceholdervk.authentication.cookie.TokenCookieJweStringSerializer;
 import it.macgood.jsonplaceholdervk.authentication.cookie.TokenCookieSessionAuthenticationStrategy;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
@@ -21,14 +26,14 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     private static final String[] WHITE_LIST_URL = {
             "/swagger-resources",
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/swagger-ui.html,",
-//            "/api/proxy/add_user/"
+            "/ws/**"
     };
 
     @Bean
@@ -56,7 +61,7 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .sessionAuthenticationStrategy(tokenCookieSessionAuthenticationStrategy))
                 .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
@@ -66,6 +71,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     static RoleHierarchy roleHierarchy() {

@@ -19,15 +19,26 @@ import java.io.IOException;
 @Setter
 public class GetCsrfTokenFilter extends OncePerRequestFilter {
 
-    private RequestMatcher requestMatcher = new AntPathRequestMatcher("/csrf", HttpMethod.GET.name());
+    private RequestMatcher requestMatcherCsrf = new AntPathRequestMatcher("/csrf", HttpMethod.GET.name());
+    private RequestMatcher requestMatcherAuth = new AntPathRequestMatcher("/api/v1/auth", HttpMethod.POST.name());
 
     private CsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (this.requestMatcher.matches(request)) {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) throws ServletException, IOException {
+        if (this.requestMatcherCsrf.matches(request)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            this.objectMapper.writeValue(response.getWriter(), this.csrfTokenRepository.loadDeferredToken(request, response).get());
+            return;
+        } else if (this.requestMatcherAuth.matches(request)) {
+            System.out.println("GetCsrfTokenFilter.doFilterInternal");
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             this.objectMapper.writeValue(response.getWriter(), this.csrfTokenRepository.loadDeferredToken(request, response).get());

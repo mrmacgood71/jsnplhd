@@ -1,4 +1,4 @@
-package it.macgood.jsonplaceholdervk.authentication.config;
+package it.macgood.jsonplaceholdervk.config;
 
 import it.macgood.jsonplaceholdervk.authentication.cookie.TokenCookieAuthenticationConverter;
 import it.macgood.jsonplaceholdervk.token.TokenAuthenticationUserDetailsService;
@@ -44,7 +44,8 @@ public class TokenCookieAuthenticationConfigurer
     public void configure(HttpSecurity builder) throws Exception {
         var cookieAuthenticationFilter = new AuthenticationFilter(
                 builder.getSharedObject(AuthenticationManager.class),
-                new TokenCookieAuthenticationConverter(this.tokenCookieStringDeserializer));
+                new TokenCookieAuthenticationConverter(this.tokenCookieStringDeserializer)
+        );
         cookieAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {});
         cookieAuthenticationFilter.setFailureHandler(
                 new AuthenticationEntryPointFailureHandler(
@@ -54,20 +55,23 @@ public class TokenCookieAuthenticationConfigurer
 
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(
-                new TokenAuthenticationUserDetailsService(this.jdbcTemplate));
+                new TokenAuthenticationUserDetailsService(this.jdbcTemplate)
+        );
 
         builder.addFilterAfter(cookieAuthenticationFilter, CsrfFilter.class)
                 .authenticationProvider(authenticationProvider);
     }
 
     public TokenCookieAuthenticationConfigurer tokenCookieStringDeserializer(
-            Function<String, Token> tokenCookieStringDeserializer) {
+            Function<String, Token> tokenCookieStringDeserializer
+    ) {
         this.tokenCookieStringDeserializer = tokenCookieStringDeserializer;
         return this;
     }
 
     public TokenCookieAuthenticationConfigurer jdbcTemplate(
-            JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate
+    ) {
         this.jdbcTemplate = jdbcTemplate;
         return this;
     }

@@ -1,4 +1,4 @@
-package it.macgood.jsonplaceholdervk.photos;
+package it.macgood.jsonplaceholdervk.albums.entity;
 
 public record Photo(
         Integer albumId,

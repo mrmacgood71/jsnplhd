@@ -2,10 +2,7 @@ package it.macgood.jsonplaceholdervk.users.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.macgood.jsonplaceholdervk.albums.entity.Album;
-import it.macgood.jsonplaceholdervk.albums.entity.AlbumResponse;
-import it.macgood.jsonplaceholdervk.config.ApiConfigurationProperties;
-import it.macgood.jsonplaceholdervk.photos.Photo;
+import it.macgood.jsonplaceholdervk.utils.ApiConfigurationProperties;
 import it.macgood.jsonplaceholdervk.posts.entity.PostResponse;
 import it.macgood.jsonplaceholdervk.users.entity.User;
 import it.macgood.jsonplaceholdervk.users.entity.UserResponse;
@@ -13,6 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,10 +38,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     @Cacheable("users")
     public List<UserResponse> getUsers() {
-        var response = restTemplate.getForEntity(apiProperties.getUsersUrl(), String.class);
-        try {
-            return mapper.readerForListOf(UserResponse.class).<ArrayList<UserResponse>>readValue(response.getBody());
-        } catch (JsonProcessingException e) { throw new RuntimeException(e);}
+        ResponseEntity<List<UserResponse>> response = restTemplate.exchange(
+                apiProperties.getUsersUrl(),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+        return response.getBody();
     }
 
     @Override

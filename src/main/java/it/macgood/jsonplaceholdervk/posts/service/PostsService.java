@@ -1,8 +1,5 @@
 package it.macgood.jsonplaceholdervk.posts.service;
 
-import it.macgood.jsonplaceholdervk.albums.entity.Album;
-import it.macgood.jsonplaceholdervk.albums.entity.AlbumResponse;
-import it.macgood.jsonplaceholdervk.photos.Photo;
 import it.macgood.jsonplaceholdervk.posts.entity.Comment;
 import it.macgood.jsonplaceholdervk.posts.entity.Post;
 import it.macgood.jsonplaceholdervk.posts.entity.PostResponse;
